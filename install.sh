@@ -25,8 +25,8 @@ build_whisper_from_source() {
   if ! command -v git &>/dev/null; then
     error "git is required to clone whisper.cpp. Install git first."
   fi
-  if ! command -v gcc &>/dev/null; then
-    error "gcc is required to build whisper.cpp. Install build-essential first."
+  if ! command -v cmake &>/dev/null; then
+    error "cmake is required to build whisper.cpp. Install cmake first."
   fi
 
   local WHISPER_BUILD_DIR
@@ -35,10 +35,11 @@ build_whisper_from_source() {
   git clone --depth 1 https://github.com/ggerganov/whisper.cpp.git "$WHISPER_BUILD_DIR"
   cd "$WHISPER_BUILD_DIR"
 
-  info "Compiling (this takes a few minutes)..."
-  make -j"$(nproc)" main
+  info "Compiling with cmake (this takes a few minutes)..."
+  cmake -B build
+  cmake --build build --config Release -j"$(nproc)"
 
-  cp main "$WHISPER_DIR/whisper-cpp"
+  cp build/bin/whisper-cli "$WHISPER_DIR/whisper-cpp"
   chmod +x "$WHISPER_DIR/whisper-cpp"
 
   cd "$SCRIPT_DIR"
