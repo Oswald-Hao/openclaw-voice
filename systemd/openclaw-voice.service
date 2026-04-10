@@ -1,0 +1,17 @@
+[Unit]
+Description=OpenClaw Voice Agent
+After=network.target pulseaudio.service
+
+[Service]
+Type=simple
+User=lejurobot
+WorkingDirectory=/home/lejurobot/openclaw-voice
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+Environment=DISPLAY=:0
+Environment=PULSE_SERVER=unix:/run/user/1000/pulse/native
+Environment=PATH=/home/lejurobot/.local/bin:/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=default.target

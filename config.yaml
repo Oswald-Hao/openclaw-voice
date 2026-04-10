@@ -1,0 +1,26 @@
+stt:
+  whisper_bin: "whisper-cpp"
+  model: "~/.config/openclaw-voice/ggml-base.bin"
+  language: "auto"
+
+tts:
+  enabled: true
+  voice: "zh-CN-XiaoxiaoNeural"
+  player: "mpv"
+
+audio:
+  sample_rate: 16000
+  silence_threshold: 0.01
+  silence_duration: 1500
+
+hotkey:
+  toggle_mode: "ctrl+alt+v"
+  push_to_talk: null
+
+mode:
+  default: "command"
+
+openclaw:
+  cli_bin: "openclaw-cli"
+  base_url: "http://127.0.0.1:18789"
+  gateway_token: ""

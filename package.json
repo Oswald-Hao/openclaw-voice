@@ -1,0 +1,21 @@
+{
+  "name": "openclaw-voice",
+  "version": "1.0.0",
+  "description": "Voice-driven AI Agent powered by OpenClaw CLI",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "edge-tts": "^1.0.1",
+    "yaml": "^2.3.0",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  }
+}

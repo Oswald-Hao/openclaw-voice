@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.wav
+*.mp3
+*.ogg
+.env
+.env.*
+!.env.example
