@@ -21,6 +21,6 @@ mode:
   default: "command"
 
 openclaw:
-  cli_bin: "openclaw-cli"
-  base_url: "http://127.0.0.1:18789"
+  cli_bin: "openclaw"
+  base_url: "ws://127.0.0.1:18789"
   gateway_token: ""

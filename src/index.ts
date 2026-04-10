@@ -7,6 +7,7 @@ import { speak } from './tts/edge-tts';
 import { handleCommand } from './modes/command';
 import { handleTyping } from './modes/typing';
 import { notify } from './input/injector';
+import { isAvailable, isGatewayHealthy } from './agent/openclaw';
 import { HotkeyListener } from './hotkey/listener';
 
 type Mode = 'command' | 'typing' | 'off';
@@ -58,16 +59,17 @@ function loadConfig(): AppConfig {
 }
 
 function checkDependencies(config: AppConfig): void {
+  const { execSync } = require('child_process');
   const deps = [
-    { cmd: 'arecord', name: 'arecord (alsa-utils)', optional: false },
-    { cmd: config.stt.whisper_bin, name: 'whisper.cpp', optional: false },
-    { cmd: config.tts.player, name: config.tts.player, optional: false },
+    { cmd: 'arecord', name: 'arecord (alsa-utils)' },
+    { cmd: config.stt.whisper_bin, name: 'whisper.cpp' },
+    { cmd: config.tts.player, name: config.tts.player },
+    { cmd: config.openclaw.cli_bin, name: 'openclaw CLI' },
   ];
 
   const missing: string[] = [];
   for (const dep of deps) {
     try {
-      const { execSync } = require('child_process');
       execSync(`which ${dep.cmd}`, { stdio: 'ignore' });
     } catch {
       missing.push(dep.name);
@@ -76,8 +78,16 @@ function checkDependencies(config: AppConfig): void {
 
   if (missing.length > 0) {
     console.error(`Missing dependencies: ${missing.join(', ')}`);
-    console.error('Run install.sh to install them.');
+    console.error('Run install.sh to install system deps.');
+    console.error('Install OpenClaw: curl -fsSL https://get.openclaw.ai | bash');
     process.exit(1);
+  }
+
+  // Check OpenClaw gateway health
+  if (!isGatewayHealthy(config.openclaw)) {
+    console.warn('Warning: OpenClaw gateway is not reachable at ' + config.openclaw.base_url);
+    console.warn('Start it with: openclaw gateway run --port 18789');
+    console.warn('Or install as service: openclaw gateway install && openclaw gateway start');
   }
 }
 
