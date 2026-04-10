@@ -29,21 +29,25 @@ export async function handleCommand(
     return '__STOP__';
   }
 
-  console.log(`[Command] Sending to OpenClaw: ${text}`);
+  console.log(`[Agent] Sending to OpenClaw...`);
 
   try {
     const response = await ask(text, config.openclaw, sessionKey);
-    console.log(`[Command] Response: ${response.substring(0, 100)}...`);
+
+    console.log(`\n┌─────────────────────────────────────`);
+    console.log(`│ Agent: ${response.length > 200 ? response.substring(0, 200) + '...' : response}`);
+    console.log(`└─────────────────────────────────────`);
 
     // Speak the response via TTS
     if (config.tts.enabled && response) {
+      console.log(`[TTS] Speaking response...`);
       await speak(response, config.tts);
     }
 
     return response;
   } catch (err: any) {
     const errMsg = `命令执行失败: ${err.message}`;
-    console.error(errMsg);
+    console.error(`\n[Agent] ${errMsg}`);
     notify('OpenClaw Voice', errMsg);
     return errMsg;
   }

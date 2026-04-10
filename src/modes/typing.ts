@@ -7,13 +7,14 @@ import { notify } from '../input/injector';
 export async function handleTyping(text: string): Promise<void> {
   if (!text.trim()) return;
 
-  console.log(`[Typing] Injecting: ${text}`);
+  console.log(`[Typing] Injecting into focused window...`);
 
   try {
     await typeText(text);
+    console.log(`[Typing] Done.`);
   } catch (err: any) {
     const errMsg = `文字注入失败: ${err.message}`;
-    console.error(errMsg);
+    console.error(`[Typing] ${errMsg}`);
     notify('OpenClaw Voice', errMsg);
   }
 }

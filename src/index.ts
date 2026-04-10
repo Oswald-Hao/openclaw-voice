@@ -149,7 +149,8 @@ async function main() {
 
     while (currentMode !== 'off') {
       try {
-        console.log(`\n[${currentMode}] Listening...`);
+        const modeLabel = currentMode === 'command' ? 'Command' : 'Typing';
+        console.log(`\n[${modeLabel}] 🎤 Listening...`);
 
         // Record audio with VAD
         const wavPath = await recordUntilSilence({
@@ -157,6 +158,8 @@ async function main() {
           silenceThreshold: config.audio.silence_threshold,
           silenceDurationMs: config.audio.silence_duration,
         });
+
+        console.log(`[STT] Transcribing...`);
 
         // Transcribe
         const text = await transcribe(wavPath, {
@@ -166,11 +169,13 @@ async function main() {
         });
 
         if (!text.trim()) {
-          console.log('[STT] No speech detected.');
+          console.log(`[STT] (no speech detected)`);
           continue;
         }
 
-        console.log(`[STT] "${text}"`);
+        console.log(`\n┌─────────────────────────────────────`);
+        console.log(`│ You: ${text}`);
+        console.log(`└─────────────────────────────────────`);
 
         // Handle based on current mode
         if (currentMode === 'command') {
@@ -193,7 +198,7 @@ async function main() {
           await handleTyping(text);
         }
       } catch (err: any) {
-        console.error(`[Error] ${err.message}`);
+        console.error(`\n[Error] ${err.message}`);
         // Brief pause before retrying to avoid tight error loop
         await new Promise((r) => setTimeout(r, 1000));
       }
