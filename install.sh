@@ -35,8 +35,8 @@ build_whisper_from_source() {
   git clone --depth 1 https://github.com/ggerganov/whisper.cpp.git "$WHISPER_BUILD_DIR"
   cd "$WHISPER_BUILD_DIR"
 
-  info "Compiling with cmake (this takes a few minutes)..."
-  cmake -B build
+  info "Compiling with cmake (static linking, this takes a few minutes)..."
+  cmake -B build -DBUILD_SHARED_LIBS=OFF
   cmake --build build --config Release -j"$(nproc)"
 
   cp build/bin/whisper-cli "$WHISPER_DIR/whisper-cpp"
